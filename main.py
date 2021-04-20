@@ -3,13 +3,6 @@ import numpy as np
 
 
 def ex1():
-    zero_sum()
-    pure_nash()
-    mixed_nash()
-
-
-def pure_nash():
-    nashArr = []
 
     tuplesA1 = ((int(globals()['e1'].get())), (int(globals()['e2'].get())))
     tuplesA2 = ((int(globals()['e3'].get())), (int(globals()['e4'].get())))
@@ -20,7 +13,13 @@ def pure_nash():
     strategyA = np.array([tuplesA1, tuplesA2])
     strategyB = np.array([tuplesB1, tuplesB2])
 
-    print(strategyA, "\n", strategyB)
+    zero_sum()
+    pure_nash(strategyA=strategyA, strategyB=strategyB)
+    mixed_nash(strategyA=strategyA, strategyB=strategyB)
+
+
+def pure_nash(strategyA, strategyB):
+    nashArr = []
 
     def check_nash(i, j):
         for k in range(2):
@@ -42,40 +41,43 @@ def pure_nash():
     if nashArr:
         resultNashStr = ""
         for i in range(0, len(nashArr), 2):
-            resultNashStr += "(" + str(nashArr[i]) + "," + str(nashArr[i+1]) + ")"
-        nashResultLabel = Label(root, text="Pure Nash result for player A and Player B" + resultNashStr).grid(row=7, column=3)
+            resultNashStr += "(" + str(nashArr[i]) + "," + str(
+                nashArr[i + 1]) + ")"
+        nashResultLabel = Label(
+            root,
+            text="Pure Nash result for player A and Player B" +
+            resultNashStr).grid(row=7, column=3)
     else:
-        nashResultLabel = Label(root, text="No Pure Nash result found").grid(row=7, column=3)
+        nashResultLabel = Label(root, text="No Pure Nash result found").grid(
+            row=7, column=3)
 
-def mixed_nash():
 
-    tuplesA1 = ((int(globals()['e1'].get())), (int(globals()['e2'].get())))
-    tuplesA2 = ((int(globals()['e3'].get())), (int(globals()['e4'].get())))
-
-    tuplesB1 = ((int(globals()['e5'].get())), (int(globals()['e6'].get())))
-    tuplesB2 = ((int(globals()['e7'].get())), (int(globals()['e8'].get())))
-
-    strategyA = np.array([tuplesA1, tuplesA2])
-    strategyB = np.array([tuplesB1, tuplesB2])
-
+def mixed_nash(strategyA, strategyB):
     # find mixed Nash
-    probabilityA = (-strategyB[1][0]+strategyB[1][1])/(strategyB[0][0]-strategyB[1][0]-strategyB[0][1]+strategyB[1][1])
-    probabilityB = (-strategyA[0][1]+strategyA[1][1])/(strategyA[0][0]-strategyA[0][1]-strategyA[1][0]+strategyA[1][1])
-    
-    if probabilityA >= 1 or probabilityA <=0:
-        print("Can't find mixed strategy for player A because player B has dominated strategy")
-        ind = np.unravel_index(np.argmax(strategyB, axis=None), strategyB.shape)
+    probabilityA = (-strategyB[1][0] + strategyB[1][1]) / (
+        strategyB[0][0] - strategyB[1][0] - strategyB[0][1] + strategyB[1][1])
+    probabilityB = (-strategyA[0][1] + strategyA[1][1]) / (
+        strategyA[0][0] - strategyA[0][1] - strategyA[1][0] + strategyA[1][1])
+
+    if probabilityA >= 1 or probabilityA <= 0:
+        print(
+            "Can't find mixed strategy for player A because player B has dominated strategy"
+        )
+        ind = np.unravel_index(np.argmax(strategyB, axis=None),
+                               strategyB.shape)
         print("Player B dominant strategy:", ind[1])
     else:
-        print("Mixed strategy player A:\n",[probabilityA,1-probabilityA])
-        
-    if probabilityB >= 1 or probabilityB <=0:
-        print("Can't find mixed strategy for player B because player A has dominated strategy")
-        ind = np.unravel_index(np.argmax(strategyA, axis=None), strategyA.shape)
+        print("Mixed strategy player A:\n", [probabilityA, 1 - probabilityA])
+
+    if probabilityB >= 1 or probabilityB <= 0:
+        print(
+            "Can't find mixed strategy for player B because player A has dominated strategy"
+        )
+        ind = np.unravel_index(np.argmax(strategyA, axis=None),
+                               strategyA.shape)
         print("Player A dominant strategy:", ind[0])
     else:
-        print("Mixed strategy player B:\n",[probabilityB,1-probabilityB])
-
+        print("Mixed strategy player B:\n", [probabilityB, 1 - probabilityB])
 
 
 def zero_sum():
@@ -91,7 +93,6 @@ def zero_sum():
     s2.append(int(e4.get()))
     s2.append(int(e6.get()))
     s2.append(int(e8.get()))
-    # print(s1, s2)
 
     for e in range(4):
         if (s1[e] + s2[e] == 0):
@@ -106,8 +107,6 @@ root = Tk()
 
 frame1 = Frame()
 frame2 = Frame()
-
-############
 
 playerA = Label(root, text="Player 2", borderwidth=2,
                 relief="groove").grid(row=0, column=3)
