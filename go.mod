@@ -1,4 +1,4 @@
-module gitlab.zalopay.vn/zp-platform/game-theory-go
+module github.com/game-theory/game-theory-go
 
 go 1.15
 

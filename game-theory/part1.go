@@ -72,7 +72,7 @@ func IndexMaximalElement(mat [][]int) (int, int) {
 	return x, y
 }
 
-func Solve(pA [][]int, pB [][]int) string {
+func SolvePart1(pA, pB [][]int) string {
 	result := ""
 
 	fmt.Println(pA)
@@ -118,7 +118,7 @@ func Solve(pA [][]int, pB [][]int) string {
 		fmt.Printf("Player A dominant strategy: %d\n", x)
 		result = result + fmt.Sprintf("Player A dominant strategy: %d<br/>", x)
 	} else {
-		fmt.Printf("Mixed strategy player B: [%f, %f]\n", probB, 1-probB)
+		fmt.Printf("Mixed strategy player B: [%g, %g]\n", probB, 1-probB)
 		result = result + fmt.Sprintf("Mixed strategy player B: [%g, %g]<br/>", probB, 1-probB)
 	}
 

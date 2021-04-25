@@ -100,10 +100,15 @@ class Matrix extends React.Component {
         this.style = {
             overflow: 'hidden',
             display: 'inline-block',
+        }
+
+        this.contentStyle = {
+            overflow: 'hidden',
+            display: 'inline-block',
             borderLeft: '2px solid #333',
             borderRight: '2px solid #333',
             padding: '0 2px',
-            borderRadius: '4px'
+            borderRadius: '4px',
         }
     }
 
@@ -306,6 +311,8 @@ class Matrix extends React.Component {
         var activeCell = this.state.x * this.getHeight() + this.state.y;
         var currentCell = 0;
 
+        this.state.columns = this.props.columns;
+
         var columns = this.state.columns.map(function(columnValues, x) {
             var column = columnValues.map(function(value, y) {
                 var active = currentCell === activeCell;
@@ -325,7 +332,18 @@ class Matrix extends React.Component {
         }, this)
         return (
             <div style={this.style}>
-                {columns}
+                <table>
+                    <tr>
+                        <th>Action</th>
+                        <th>Player B</th>
+                    </tr>
+                    <tr>
+                        <th>Player A</th>
+                        <td>
+                            <div style={this.contentStyle}>{columns}</div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         );
     }
