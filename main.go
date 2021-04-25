@@ -84,6 +84,24 @@ func main() {
 		result := gametheory.SolvePart2(n, m, pA, pB)
 		context.Writer.Write([]byte(result))
 	})
+	server.POST("/api/part3", func(context *gin.Context) {
+		body, err := context.GetRawData()
+		if err != nil {
+			context.Writer.Write([]byte("Wrong data"))
+			return
+		}
+		data := string(body)
+		arr := strings.Split(data, ",")
+		n := len(arr)
+		nbChoice := make([]int, n)
+		for i := 0; i < n; i++ {
+			tmp, _ := strconv.ParseInt(arr[i], 10, 32)
+			nbChoice[i] = int(tmp)
+		}
+
+		result := gametheory.SolvePart3(n, nbChoice)
+		context.Writer.Write([]byte(result))
+	})
 	server.NoRoute(func(context *gin.Context) {
 		context.HTML(200, "index.html",nil)
 	})

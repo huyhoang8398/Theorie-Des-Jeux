@@ -100,11 +100,6 @@ class Matrix extends React.Component {
         this.style = {
             overflow: 'hidden',
             display: 'inline-block',
-        }
-
-        this.contentStyle = {
-            overflow: 'hidden',
-            display: 'inline-block',
             borderLeft: '2px solid #333',
             borderRight: '2px solid #333',
             padding: '0 2px',
@@ -330,22 +325,7 @@ class Matrix extends React.Component {
             return col;
 
         }, this)
-        return (
-            <div style={this.style}>
-                <table>
-                    <tr>
-                        <th>Action</th>
-                        <th>Player B</th>
-                    </tr>
-                    <tr>
-                        <th>Player A</th>
-                        <td>
-                            <div style={this.contentStyle}>{columns}</div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        );
+        return (<div style={this.style}>{columns}</div>);
     }
 }
 
