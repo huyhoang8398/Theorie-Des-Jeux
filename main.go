@@ -103,7 +103,7 @@ func main() {
 		context.Writer.Write([]byte(result))
 	})
 	server.NoRoute(func(context *gin.Context) {
-		context.HTML(200, "index.html",nil)
+		context.HTML(200, "index.html", nil)
 	})
 	server.Run(":8082")
 }
