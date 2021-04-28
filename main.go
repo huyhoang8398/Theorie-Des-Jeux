@@ -102,8 +102,30 @@ func main() {
 		result := gametheory.SolvePart3(n, nbChoice)
 		context.Writer.Write([]byte(result))
 	})
+	server.POST("/api/part4", func(context *gin.Context) {
+		body, err := context.GetRawData()
+		if err != nil {
+			context.Writer.Write([]byte("Wrong data"))
+			return
+		}
+		data := string(body)
+		tmp := strings.Split(data, ";")
+
+		permu := make([][]int, 27)
+		for i := 0; i < 27; i++ {
+			pts := strings.Split(tmp[i], ",")
+			permu[i] = make([]int, 3)
+			for j := 0; j < 3; j++ {
+				tmp, _ := strconv.ParseInt(pts[j], 10, 32)
+				permu[i][j] = int(tmp)
+			}
+		}
+
+		result := gametheory.SolvePart4(3, []int{3,3,3}, permu)
+		context.Writer.Write([]byte(result))
+	})
 	server.NoRoute(func(context *gin.Context) {
-		context.HTML(200, "index.html", nil)
+		context.HTML(200, "index.html",nil)
 	})
 	server.Run(":8082")
 }

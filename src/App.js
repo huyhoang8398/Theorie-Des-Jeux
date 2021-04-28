@@ -21,6 +21,9 @@ function App() {
     const [result3, setResult3] = useState("------");
     const p3 = useRef(null);
 
+    const [result4, setResult4] = useState("------");
+    const p4 = useRef(null);
+
     const style = {
         overflow: 'hidden',
         display: 'inline-block',
@@ -147,6 +150,38 @@ function App() {
         });
     }
 
+    const Check4 = function() {
+        if (p4.current === null) {
+            return;
+        }
+        let p = p4.current;
+
+        let data = "";
+        for (let j = 0; j < 26; j++) {
+            for (let i = 0; i < 2; i++) {
+                data += p.getCellValue(i, j);
+                data += ",";
+            }
+            data += p.getCellValue(2, j);
+            data += ";";
+        }
+        for (let i = 0; i < 2; i++) {
+            data += p.getCellValue(i, 26);
+            data += ",";
+        }
+        data += p.getCellValue(2, 26);
+
+        fetch("http://localhost:8082/api/part4", {
+            method: 'POST',
+            body: data
+        }).then((response) => response.text()).catch(err => {
+            setResult4("<h1>Wrong input</h1>");
+            console.log("Wrong input");
+        }).then(data => {
+            setResult4(data);
+        })
+    }
+
     return (
     <div className="App">
         <h1>Part 1</h1>
@@ -256,6 +291,35 @@ function App() {
             <br/>
             <div>Result:</div>
             <div dangerouslySetInnerHTML={{__html: result3}}></div>
+        </div>
+        <h1>Part 4</h1>
+        <div>
+            <label>
+                Number of players: 3
+            </label>
+        </div>
+        <div>
+            <div style={style}>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Player</th>
+                    </tr>
+                    <tr>
+                        <th>Strategy</th>
+                        <td>
+                            <Matrix ref={p4} columns={[[0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2],[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2]]} resize={'none'}></Matrix>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
+            <br/>
+            <button onClick={Check4}>Check</button>
+            <br/>
+            <br/>
+            <div>Result:</div>
+            <div dangerouslySetInnerHTML={{__html: result4}}></div>
         </div>
     </div>
   );

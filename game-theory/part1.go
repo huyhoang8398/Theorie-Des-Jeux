@@ -77,7 +77,6 @@ func SolvePart1(pA, pB [][]int) string {
 
 	fmt.Println(pA)
 	fmt.Println(pB)
-	fmt.Println(ReverseSignMatrix(pB))
 
 	//check zerosum game
 	zeroSum := CompareMatrix(pA, ReverseSignMatrix(pB))
