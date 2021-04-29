@@ -4,9 +4,17 @@ import React, {useState, useRef, useEffect} from "react";
 import Matrix from "./library/react-matrix"
 
 function App() {
+    var [pA1value, setPA1value] = useState([[2,0], [1,1]]);
+    var [pA2value, setPA2value] = useState([[1,0], [0,2]]);
+    var [p4value, setP4value] = useState([[0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2],[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2]]);
+
     const [result1, setResult1] = useState("------");
     const pA1 = useRef(null);
     const pB1 = useRef(null);
+    const [simulate1, setSimulate1] = useState("------");
+    const userProbA = useRef(null);
+    const userProbB = useRef(null);
+    const [showStepByStep, setShowStepByStep] = useState(false);
 
     const h2 = useRef(null);
     const w2 = useRef(null);
@@ -45,6 +53,40 @@ function App() {
             body: data
         }).then(resp => resp.text()).then(data => {
             setResult1(data)
+        });
+    }
+
+    const Simulate1 = function() {
+        if (pA1.current === null || pB1.current === null) {
+            return;
+        }
+        if (userProbA.current === null || userProbB.current === null) {
+            return;
+        }
+        let a = pA1.current;
+        let b = pB1.current;
+        let uA = userProbA.current.value;
+        let uB = userProbB.current.value;
+
+        if (uA === "" || uB === "") {
+            return;
+        }
+
+        let data = showStepByStep
+        data += "#"
+        data += uA;
+        data += "#"
+        data += uB;
+        data += "$"
+        data += a.getCellValue(0, 0) + "," + a.getCellValue(1, 0) + ";" + a.getCellValue(0, 1) + "," + a.getCellValue(1, 1)
+        data += "#"
+        data += b.getCellValue(0, 0) + "," + b.getCellValue(1, 0) + ";" + b.getCellValue(0, 1) + "," + b.getCellValue(1, 1)
+
+        fetch("http://localhost:8082/api/simulate1", {
+            method: 'POST',
+            body: data
+        }).then(resp => resp.text()).then(data => {
+            setSimulate1(data)
         });
     }
 
@@ -189,11 +231,11 @@ function App() {
             <div className="row">
                 <div className="column">
                     <h1>RewardA</h1>
-                    <Matrix ref={pA1} columns={[[2,0], [1,1]]} resize={'none'}></Matrix>
+                    <Matrix ref={pA1} columns={pA1value} resize={'none'}></Matrix>
                 </div>
                 <div className="column">
                     <h1>RewardB</h1>
-                    <Matrix ref={pB1} columns={[[1,0], [0,2]]} resize={'none'}></Matrix>
+                    <Matrix ref={pB1} columns={pA2value} resize={'none'}></Matrix>
                 </div>
             </div>
             <button onClick={Check1}>Check</button>
@@ -201,6 +243,31 @@ function App() {
             <br/>
             <div>Result:</div>
             <div dangerouslySetInnerHTML={{__html: result1}}></div>
+
+            <br/>
+            <br/>
+            <div>
+                <label>
+                    User enter prob of player A to simulating (0.0-1.0):
+                    <input ref={userProbA} style={{margin: '10px'}} type="text"/>
+                </label>
+                <br/>
+                <label>
+                    User enter prob of player B to simulating (0.0-1.0):
+                    <input ref={userProbB} style={{margin: '10px'}} type="text"/>
+                </label>
+                <br/>
+                <label>
+                    Show step by step:
+                    <input defaultChecked={showStepByStep} onChange={() => setShowStepByStep(!showStepByStep)} style={{margin: '10px'}} type="checkbox"/>
+                </label>
+                <br/>
+                <button onClick={Simulate1} style={{margin: '10px'}}>Simulate</button>
+            </div>
+            <br/>
+            <br/>
+            <div>Result:</div>
+            <div dangerouslySetInnerHTML={{__html: simulate1}}></div>
         </div>
         <h1>Part 2</h1>
         <div>
@@ -292,35 +359,35 @@ function App() {
             <div>Result:</div>
             <div dangerouslySetInnerHTML={{__html: result3}}></div>
         </div>
-        <h1>Part 4</h1>
-        <div>
-            <label>
-                Number of players: 3
-            </label>
-        </div>
-        <div>
-            <div style={style}>
-                <table>
-                    <tr>
-                        <th></th>
-                        <th>Player</th>
-                    </tr>
-                    <tr>
-                        <th>Strategy</th>
-                        <td>
-                            <Matrix ref={p4} columns={[[0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2,0,1,2],[0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2,0,0,0,1,1,1,2,2,2],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2]]} resize={'none'}></Matrix>
-                        </td>
-                    </tr>
-                </table>
+            <h1>Part 4</h1>
+            <div>
+                <label>
+                    Number of players: 3
+                </label>
             </div>
-            <br/>
-            <br/>
-            <button onClick={Check4}>Check</button>
-            <br/>
-            <br/>
-            <div>Result:</div>
-            <div dangerouslySetInnerHTML={{__html: result4}}></div>
-        </div>
+            <div>
+                <div style={style}>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Player</th>
+                        </tr>
+                        <tr>
+                            <th>Strategy</th>
+                            <td>
+                                <Matrix ref={p4} columns={p4value} resize={'none'}></Matrix>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+                <br/>
+                <button onClick={Check4}>Check</button>
+                <br/>
+                <br/>
+                <div>Result:</div>
+                <div dangerouslySetInnerHTML={{__html: result4}}></div>
+            </div>
     </div>
   );
 }

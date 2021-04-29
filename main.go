@@ -45,6 +45,46 @@ func main() {
 		result := gametheory.SolvePart1(pA, pB)
 		context.Writer.Write([]byte(result))
 	})
+	server.POST("/api/simulate1", func(context *gin.Context) {
+		body, err := context.GetRawData()
+		if err != nil {
+			context.Writer.Write([]byte("Wrong data"))
+			return
+		}
+		data := string(body)
+		tmp := strings.Split(data, "$")
+		meta := strings.Split(tmp[0], "#")
+		showStepByStep, _ := strconv.ParseBool(meta[0])
+		userProbA, _ := strconv.ParseFloat(meta[1], 64)
+		userProbB, _ := strconv.ParseFloat(meta[2], 64)
+
+		value := tmp[1]
+		pos := strings.IndexByte(value, '#')
+		A := strings.Split(value[:pos], ";")
+		B := strings.Split(value[pos+1:], ";")
+
+		pA := make([][]int, 2)
+		for i := 0; i < 2; i++ {
+			pA[i] = make([]int, 2)
+			pts := strings.Split(A[i], ",")
+			for j := 0; j < 2; j++ {
+				tmp, _ := strconv.ParseInt(pts[j], 10, 32)
+				pA[i][j] = int(tmp)
+			}
+		}
+		pB := make([][]int, 2)
+		for i := 0; i < 2; i++ {
+			pB[i] = make([]int, 2)
+			pts := strings.Split(B[i], ",")
+			for j := 0; j < 2; j++ {
+				tmp, _ := strconv.ParseInt(pts[j], 10, 32)
+				pB[i][j] = int(tmp)
+			}
+		}
+
+		result := gametheory.SimulatePart1(showStepByStep, userProbA, userProbB, pA, pB)
+		context.Writer.Write([]byte(result))
+	})
 	server.POST("/api/part2", func(context *gin.Context) {
 		body, err := context.GetRawData()
 		if err != nil {

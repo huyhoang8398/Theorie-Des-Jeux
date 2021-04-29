@@ -3,6 +3,8 @@ package game_theory
 import (
 	"fmt"
 	"math"
+	"math/rand"
+	"time"
 )
 
 func CompareMatrix(mat1 [][]int, mat2 [][]int) bool {
@@ -124,3 +126,101 @@ func SolvePart1(pA, pB [][]int) string {
 
 	return result
 }
+
+func SimulatePart1(showStep bool, userProbA, userProbB float64, pA, pB [][]int) string {
+	result := ""
+	tmp := ""
+
+	fmt.Println(pA)
+	fmt.Println(pB)
+
+	//find mixed Nash
+	var probA, probB float64
+	probAresult := float64(-pB[1][0] + pB[1][1]) / float64(pB[0][0] - pB[1][0] - pB[0][1] + pB[1][1])
+	probBresult := float64(-pA[0][1] + pA[1][1]) / float64(pA[0][0] - pA[0][1] - pA[1][0] + pA[1][1])
+
+	probA = probAresult
+	probB = 1 - probAresult
+	if probAresult >= 1 || probAresult <= 0 {
+		if probBresult >= 1 || probBresult <= 0 {
+			probA = 0
+			probB = 0
+		}
+		probA = probBresult
+		probB = 1 - probBresult
+	}
+
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	result += "<div className=\"row\">"
+	result += "<div className=\"column\">"
+
+	result += fmt.Sprintf("Given strategy: probA = %g, probB = %g<br/>", userProbA, userProbB)
+	result += "Simulate the game on 100 achievements with the given strategy<br/>"
+
+	var actA, actB int
+	var utilityA, utilityB int
+	utilityA = 0
+	utilityB = 0
+	for i := 0; i < 100; i++ {
+		actA = RandomAction(userProbA)
+		actB = RandomAction(userProbB)
+
+		utilityA += pA[actA-1][actB-1]
+		utilityB += pB[actA-1][actB-1]
+		if showStep {
+			tmp += fmt.Sprintf("playerA + %d ; playerB + %d<br/>", pA[actA-1][actB-1], pB[actA-1][actB-1])
+		}
+	}
+	result += fmt.Sprintf("The average player A utility: %g<br/>", float64(utilityA)/100)
+	result += fmt.Sprintf("The average player B utility: %g<br/>", float64(utilityB)/100)
+
+	result += "<br/>"
+	if showStep {
+		result += "Step by step:<br/>"
+		result += tmp
+	}
+	tmp = ""
+
+	result += "</div>"
+	result += "<div className=\"column\">"
+
+	result += fmt.Sprintf("Mixed Nash equilibrium strategy: probA = %g, probB = %g<br/>", probA, probB)
+	result += "Simulate the game on 100 achievements with the Mixed Nash equilibrium strategy<br/>"
+
+	utilityA = 0
+	utilityB = 0
+	for i := 0; i < 100; i++ {
+		actA = RandomAction(probA)
+		actB = RandomAction(probB)
+
+		utilityA += pA[actA-1][actB-1]
+		utilityB += pB[actA-1][actB-1]
+		if showStep {
+			tmp += fmt.Sprintf("playerA + %d ; playerB + %d<br/>", pA[actA-1][actB-1], pB[actA-1][actB-1])
+		}
+	}
+	result += fmt.Sprintf("The average player A utility: %g<br/>", float64(utilityA)/100)
+	result += fmt.Sprintf("The average player B utility: %g<br/>", float64(utilityB)/100)
+
+	result += "<br/>"
+	if showStep {
+		result += "Step by step:<br/>"
+		result += tmp
+	}
+	tmp = ""
+
+	result += "</div>"
+	result += "</div>"
+
+	return result
+}
+
+func RandomAction(prob float64) int {
+	r := rand.Float64()
+	if r < prob {
+		return 1
+	}
+	return 2
+}
+
