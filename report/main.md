@@ -269,6 +269,8 @@ We will mark the choice `1` if it is the best choice to response to the other pl
 After that we find the pure Nash by multiply two matrix cell by cell. If both players have a same case as their best choice, that case is considered as Nash
 equilibrium state.
 
+We will mark the choice ”1” if it is the best choice to response to the other player choice. There might be multiple best choices as they have equal value. If both players have a same case as their best choice, that case is considered as Nashequilibrium state. Considering the complexity of this process, we have the complexity of finding best choice for each player is O(n ∗ m) and the complexity of cell-by-cell multiplication step O(n ∗ m). The complexity of finding pure Nash state(s) in this scenario is O(N ∗ M )
+
 ```Golang
 func MultiplyCellByCellMatrix(n, m int, pA [][]int, pB [][]int) [][]int {
 	mat := make([][]int, n)
@@ -311,3 +313,33 @@ for i, v := range dominateB {
 **Result**
 
 ![Result Problem 2](resultP2.png)
+
+## Multiple 
+
+
+Based on the game defined in the section 3, the best method to input the game data is by text
+method. The first line will be the number of player ( N ). The second line will be an array showing
+the max choice of each player ( [C0, C1, C2, ..., CN −1 ] ). The code will generate a text file with the
+permutation of all possible cases for user to input the data in the format Listing 1.9.
+
+```
+1
+ # Case [0 ,0 ,0]
+2
+ < user_input_reward_here >
+3
+ # Case [1 ,0 ,0]
+4
+ 10 20 30
+5
+ # Case [2 ,0 ,0]
+ ```
+
+### Pure nash
+For this section, I have developed a pivot-comparing algorithm to check every possible cases for
+Pure Nash Equilibrium. Therefore, I confidence that the code works with any size of N players,
+unlimited number of actions per player. The method uses one case as a pivot and find other
+cases to compare with the pivot. The worse case will be mark as ”non-Nash” and the better case
+will be a new pivot. Using pivot method with marking table makes the algorithm better than brute-force method. 
+to check every cases at least once. If N is too large, the time to run will be low as the complexity is
+exponential time.

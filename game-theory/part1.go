@@ -103,8 +103,8 @@ func SolvePart1(pA, pB [][]int) string {
 	probB = float64(-pA[0][1] + pA[1][1]) / float64(pA[0][0] - pA[0][1] - pA[1][0] + pA[1][1])
 
 	if probA >= 1 || probA <= 0 {
-		fmt.Println("Can't find mixed strategy for player A because player B has dominated strategy")
-		result = result + "Can't find mixed strategy for player A because player B has dominated strategy<br/>"
+		fmt.Println("Cannot find mixed strategy for player A because player B has dominated strategy")
+		result = result + "Player B has dominated strategy => No mixed strategy for player A<br/>"
 		_, y := IndexMaximalElement(pB)
 		fmt.Printf("Player B dominant strategy: %d\n", y)
 		result = result + fmt.Sprintf("Player B dominant strategy: %d<br/>", y)
@@ -114,8 +114,8 @@ func SolvePart1(pA, pB [][]int) string {
 	}
 
 	if probB >= 1 || probB <= 0 {
-		fmt.Println("Can't find mixed strategy for player B because player A has dominated strategy")
-		result = result + "Can't find mixed strategy for player B because player A has dominated strategy<br/>"
+		fmt.Println("Cannot find mixed strategy for player B because player A has dominated strategy")
+		result = result + "Player A has dominated strategy => No mixed strategy for player B<br/>"
 		x, _ := IndexMaximalElement(pA)
 		fmt.Printf("Player A dominant strategy: %d\n", x)
 		result = result + fmt.Sprintf("Player A dominant strategy: %d<br/>", x)
