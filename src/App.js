@@ -373,7 +373,7 @@ function App() {
                             <th>Player</th>
                         </tr>
                         <tr>
-                            <th>Strategy</th>
+                            <th>Reward</th>
                             <td>
                                 <Matrix ref={p4} columns={p4value} resize={'none'}></Matrix>
                             </td>

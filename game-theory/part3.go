@@ -91,8 +91,10 @@ func SolvePart3(n int, nbChoice []int) string {
 	permu := make([][]int, 0, maxChoice)
 
 	permu = append(permu, CopyArray(cIter))
-	fmt.Printf("# Case %v\n", cIter)
-	tmp += fmt.Sprintf("# Case %v<br/>", cIter)
+	fmt.Printf("# Case %v - ", cIter)
+	fmt.Printf("Reward: %v\n", cIter)
+	tmp += fmt.Sprintf("# Case %v - ", cIter)
+	tmp += fmt.Sprintf("Reward: %v<br/>", cIter)
 	index := 0
 	for {
 		if index >= n {
@@ -100,8 +102,10 @@ func SolvePart3(n int, nbChoice []int) string {
 		} else {
 			if cIter[index]+1 < nbChoice[index] {
 				cIter[index] += 1
-				fmt.Printf("# Case %v\n", cIter)
-				tmp += fmt.Sprintf("# Case %v<br/>", cIter)
+				fmt.Printf("# Case %v - ", cIter)
+				fmt.Printf("Reward: %v\n", cIter)
+				tmp += fmt.Sprintf("# Case %v - ", cIter)
+				tmp += fmt.Sprintf("Reward: %v<br/>", cIter)
 				permu = append(permu, CopyArray(cIter))
 				if index > 0 {
 					index = 0
@@ -226,18 +230,48 @@ func SolvePart3(n int, nbChoice []int) string {
 	return result
 }
 
-func SolvePart4(n int, nbChoice []int, permu [][]int) string {
+func SolvePart4(n int, nbChoice []int, data [][]int) string {
 	result := ""
+	tmp := ""
 
 	fmt.Printf("N = %d\n", n)
 	fmt.Printf("Max choice array: %v\n", nbChoice)
 	result += fmt.Sprintf("N = %d<br/>", n)
 	result += fmt.Sprintf("Max choice array: %v<br/>", nbChoice)
 
+	//generate permutation
 	maxChoice := GetMaxCase(nbChoice)
 	cIter := make([]int, n)
+	permu := make([][]int, 0, maxChoice)
 
-	data := CopyArray2Dims(permu)
+	permu = append(permu, CopyArray(cIter))
+	fmt.Printf("# Case %v - ", cIter)
+	fmt.Printf("Reward: %v\n", data[0])
+	tmp += fmt.Sprintf("# Case %v - ", cIter)
+	tmp += fmt.Sprintf("Reward: %v<br/>", data[0])
+	index := 0
+	i := 0
+	for {
+		if index >= n {
+			break
+		} else {
+			if cIter[index]+1 < nbChoice[index] {
+				cIter[index] += 1
+				i++
+				fmt.Printf("# Case %v - ", cIter)
+				fmt.Printf("Reward: %v\n", data[i])
+				tmp += fmt.Sprintf("# Case %v - ", cIter)
+				tmp += fmt.Sprintf("Reward: %v<br/>", data[i])
+				permu = append(permu, CopyArray(cIter))
+				if index > 0 {
+					index = 0
+				}
+			} else {
+				cIter[index] = 0
+				index += 1
+			}
+		}
+	}
 
 	zeroSum := true
 	for i := 0; i < maxChoice; i++ {
@@ -342,6 +376,10 @@ func SolvePart4(n int, nbChoice []int, permu [][]int) string {
 			}
 		}
 	}
+
+	result += "<br/>"
+	result += "<br/>"
+	result += tmp
 
 	return result
 }

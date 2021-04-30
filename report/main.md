@@ -48,7 +48,7 @@ The first section is a game with two players and they have two strategies, the s
 
 # II. Programs and Materials
 
-For the graphical user interface part, I create a web application by using `React` for front-end part and `Golang` for backend server. The reason I chose this stack because it is easier to create UI in web base and also I am familiar with Javascript and Golang. More important, Golang is much faster than Python (I did a version in Python but it is slower than Golang).
+For the graphical user interface part, I create a web application by using `React` for front-end part and `Golang` for backend server. The reason I chose this stack because it is easier to create UI in web base and also I am more familiar with Javascript and Golang.
 
 **Requirement**
 
@@ -180,8 +180,8 @@ var probA, probB float64
 probA = float64(-pB[1][0] + pB[1][1]) / float64(pB[0][0] - pB[1][0] - pB[0][1] + pB[1][1])
 probB = float64(-pA[0][1] + pA[1][1]) / float64(pA[0][0] - pA[0][1] - pA[1][0] + pA[1][1])
 if probA >= 1 || probA <= 0 {
-	fmt.Println("Can't find mixed strategy for player A because player B has dominated strategy")
-	result = result + "Can't find mixed strategy for player A because player B has dominated strategy<br/>"
+	fmt.Println("Cannot find mixed strategy for player A because player B has dominated strategy")
+	result = result + "Player B has dominated strategy => No mixed strategy for player A<br/>"
 	_, y := IndexMaximalElement(pB)
 	fmt.Printf("Player B dominant strategy: %d\n", y)
 	result = result + fmt.Sprintf("Player B dominant strategy: %d<br/>", y)
@@ -190,8 +190,8 @@ if probA >= 1 || probA <= 0 {
 	result = result + fmt.Sprintf("Mixed strategy player A: [%g, %g]<br/>", probA, 1-probA)
 }
 if probB >= 1 || probB <= 0 {
-	fmt.Println("Can't find mixed strategy for player B because player A has dominated strategy")
-	result = result + "Can't find mixed strategy for player B because player A has dominated strategy<br/>"
+	fmt.Println("Cannot find mixed strategy for player B because player A has dominated strategy")
+	result = result + "Player A has dominated strategy => No mixed strategy for player B<br/>"
 	x, _ := IndexMaximalElement(pA)
 	fmt.Printf("Player A dominant strategy: %d\n", x)
 	result = result + fmt.Sprintf("Player A dominant strategy: %d<br/>", x)
@@ -287,7 +287,11 @@ func MultiplyCellByCellMatrix(n, m int, pA [][]int, pB [][]int) [][]int {
 ### Dominated strategy
 
 In the previous part, we already have the best choice which stamp all the best choice of a player for each choice of other players.
-On the off chance that, for each choice of B, the leading choice of A does not alter, it implies that the finest choice of A is the dominated strategy. So that we will find the product of all the column and row of the matrix
+On the off chance that, for each choice of B, the leading choice of A does not alter, it implies that the finest choice of A is the dominated strategy. So that we will find the product of all the column and row of the matrix.
+
+PlayerA finds the product of all columns if that product = 1 means that if playerA performs that action, he will always get a score higher than B.
+
+If the whole row of maxOne is = 1, it means that when performing this action, no matter what action B performs, A will at least draw or win.
 
 ```Golang
 //product of all the col
@@ -314,32 +318,9 @@ for i, v := range dominateB {
 
 ![Result Problem 2](resultP2.png)
 
-## Multiple 
+## Multiple players - multiple choices
 
-
-Based on the game defined in the section 3, the best method to input the game data is by text
-method. The first line will be the number of player ( N ). The second line will be an array showing
-the max choice of each player ( [C0, C1, C2, ..., CN −1 ] ). The code will generate a text file with the
-permutation of all possible cases for user to input the data in the format Listing 1.9.
-
-```
-1
- # Case [0 ,0 ,0]
-2
- < user_input_reward_here >
-3
- # Case [1 ,0 ,0]
-4
- 10 20 30
-5
- # Case [2 ,0 ,0]
- ```
-
-### Pure nash
-For this section, I have developed a pivot-comparing algorithm to check every possible cases for
-Pure Nash Equilibrium. Therefore, I confidence that the code works with any size of N players,
-unlimited number of actions per player. The method uses one case as a pivot and find other
-cases to compare with the pivot. The worse case will be mark as ”non-Nash” and the better case
-will be a new pivot. Using pivot method with marking table makes the algorithm better than brute-force method. 
-to check every cases at least once. If N is too large, the time to run will be low as the complexity is
-exponential time.
+For the input, we need the number player (denoted as N) and for each player, we also need the maximum choice for them, represented as an array.
+For example, if we have 3 players, each of them has 3 maximum choices, so that N=3 and the array represented the maximum choices of each players is [3,3,3]
+And for each permutation (for example [0,0,1]) means that the player A picks choice 0, player B 0 and player C is 1
+corresponding to the input has the reward [-1,0,2]
